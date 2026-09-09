@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+    <!-- Jenkins must provide these environment variables at build time. -->
+    <servers>
+        <server>
+            <id>MAVEN_SERVER_ID</id>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>pulsesg-private-dependencies</id>
+            <repositories>
+                <repository>
+                    <id>MAVEN_SERVER_ID</id>
+                    <url>${env.PRIVATE_MAVEN_REPOSITORY_URL}</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>pulsesg-private-dependencies</activeProfile>
+    </activeProfiles>
+</settings>
