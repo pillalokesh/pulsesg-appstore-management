@@ -1,0 +1,34 @@
+#!/bin/bash
+
+export SERVICE_HOME=${SERVICE_HOME:=""}
+export BUILD_DIR="$SERVICE_HOME"/release
+export ENV_FILE="$BUILD_DIR"/ENV 
+export PROCFILE="$BUILD_DIR"/Procfile
+
+release_app() {
+    if [[ -f $ENV_FILE ]]; then
+    {
+        dos2unix $ENV_FILE 2> /dev/null
+        eval . $ENV_FILE > /dev/null 2>&1
+    }
+    fi
+    echo "====>  Environment Variables set successfully - service ready for startup"
+}
+
+run_app(){
+    echo "===> Starting app using [$PROCFILE]"
+    dos2unix $PROCFILE 2> /dev/null
+    chmod a+x $PROCFILE 2> /dev/null
+    "$PROCFILE" &
+     pid="$!"
+        wait ${!}
+}
+
+main(){
+    echo "====> initiating the app"
+    release_app
+    printenv
+    run_app
+}
+
+main

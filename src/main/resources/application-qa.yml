@@ -1,0 +1,152 @@
+server:
+  forward-headers-strategy: framework
+  port: 8100
+  tomcat:
+    max-swallow-size: 25MB
+    max-threads: 200
+    max-http-post-size: 15728640  # 15 MB in bytes
+  servlet:
+    contextPath: /be/app/store
+management:
+  health:
+    elasticsearch:
+      enabled: false
+  endpoints:
+    web:
+      base-path: /
+      path-mapping.health: /actuator/health
+      exposure:
+        include: health
+    jmx:
+      exposure:
+        exclude: '*'
+async:
+  asynctempbaseurl: #http://localhost:9010/be/catalog/topic/industries-topic-metrics
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  servlet:
+    multipart:
+      max-file-size: 7MB
+      max-request-size: 15MB
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: pulsesg-task-service
+  datasource:
+    url: ${PG_PULSORASTORE_URL}
+    username: ${PG_PULSORASTORE_USER}
+    password: ${PG_PULSORASTORE_PASSWORD}
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 20
+
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        hbm2dll:
+          create_namespaces: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 500
+          lob:
+            non_contextual_creation: true
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      indent-output: true
+  data:
+    couchbase:
+      auto-index: true
+  kafka:
+    bootstrap-servers: qa-kafka.pulsesg-kafka.svc.cluster.local:9092
+    group-id: group_id
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      topic: topic-output-qa
+      topic-notification: topic-notificationdata-qa
+      topic-calculator : period-config-qa
+      output-confirmation-status-topic: topic-dd-output-status-confirmation-qa
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      task-topic: topic-task-qa
+      submittedMetric-topic: topic-submittedMetric-qa
+      formula-calculation-topic: topic-formula-calculation-qa
+
+couchDB:
+  login:
+    userName: generated
+#LOGGING_ROOT: C:/workspace/logs/pulsesg/server
+
+cloud:
+  aws:
+    region:
+      static: us-east-1
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    bucket: pulsesg-evidences-qa
+
+logging:
+  level:
+    root: INFO
+    org.springframework.data.couchbase.repository.query: DEBUG
+  io:
+    swagger:
+      models:
+        parameters:
+          AbstractSerializableParameter: error
+# main:
+#   business:
+#     uri: /be/task
+validations:
+  task:
+    date-pattern: yyyy-MM-dd HH:mm:ss
+    yearmomth: YYYYMM
+    htmlTags: <("[^"]*"|'[^']*'|[^'">])*>
+
+# hystrix changes
+hystrix:
+  command:
+    taskService-addNewTask:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 10
+      cicuitBreaker:
+        enabled: true
+        requestVolumeThreshold: 30
+        sleepWindowInMilliseconds: 5000
+        errorThresholdPercentage: 90
+        forceOpen: false
+  threadpool:
+    taskService-addNewTask:
+      coreSize: 2
+      maximumSize: 5
+      queueSizeRejectionThreshold: 5
+      allowMaximumSizeToDivergeFromCoreSize: true
+application:
+  bucket:
+    name: pulsesg-appstore-management-qa
+    tagKey: pulsesg-appstore-management
+    flagBucketav: false
+http:
+  pulsesg:
+    main: qa.pulsesg.com

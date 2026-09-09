@@ -1,0 +1,87 @@
+#!/bin/sh
+
+action=${1}
+
+
+APP_NAME="${APP_NAME:-""}"
+IMAGE_NAME="${IMAGEURI}/${IMAGE}"
+CHART_LOCATION="${CHART_LOCATION:-/cnab/app/charts/$APP_NAME}"
+HELM_VALUE_OVERRIDES="--set-string "
+HELM_VALUE_OVERRIDES+="image.repository=${IMAGE_NAME},image.tag=${TAG},app.name=${APP_NAME},app.env=${APPENV},app.namespace=${EKS_NAMESPACE},app.host=${DEPLOY_HOST}"
+case $action in
+
+    test)
+    ;;
+    lint)
+        echo "chart location $CHART_LOCATION"
+        echo "debugging the helm chart"
+        helm template ${CHART_LOCATION}
+        helm lint --debug ${CHART_LOCATION}
+
+    ;;
+    plan)
+        echo "plan action"
+        ls /cnab/app/tf
+        echo "initializing terraform"
+        terraform init -plugin-dir=${TF_PLUGIN_DIR} ${TF_PROVISION_DIR}
+        
+        echo "running Plan"
+
+        terraform plan ${TF_PROVISION_DIR}
+
+    ;;
+    installiac)
+        echo "Install Infra action"
+
+        echo "initializing terraform"
+        terraform init -plugin-dir=${TF_PLUGIN_DIR} ${TF_PROVISION_DIR}
+
+        echo "running apply action"
+
+        terraform apply -auto-approve ${TF_PROVISION_DIR}
+        
+    ;;
+
+    dry-run)
+        echo "helm dry-run"
+        echo "helm upgrade --install --dry-run ${BRANCH_NAME}-${APP_NAME} --namespace ${EKS_NAMESPACE} ${HELM_VALUE_OVERRIDES} ${CHART_LOCATION}"
+        helm upgrade --install --dry-run ${BRANCH_NAME}-${APP_NAME} --namespace ${EKS_NAMESPACE} ${HELM_VALUE_OVERRIDES} ${CHART_LOCATION}
+    ;;
+
+    install)
+     echo "Installing helm chart"
+     echo " helm upgrade --install  ${APPENV}-${APP_NAME} --namespace ${EKS_NAMESPACE} ${HELM_VALUE_OVERRIDES} ${CHART_LOCATION} "
+     helm upgrade --install  ${APPENV}-${APP_NAME} --namespace ${EKS_NAMESPACE} ${HELM_VALUE_OVERRIDES} ${CHART_LOCATION}
+    ;;
+    uninstall)
+        echo "uninstall action"
+        helm uninstall ${APPENV}-${APP_NAME} --namespace ${EKS_NAMESPACE}
+
+    ;;
+    uninstalliac)
+        echo "UnInstall Infra action"
+
+        echo "initializing terraform"
+        terraform init -plugin-dir=${TF_PLUGIN_DIR} ${TF_PROVISION_DIR}
+
+        echo "running destroy action"
+
+        terraform destroy -auto-approve ${TF_PROVISION_DIR}
+        
+    ;;
+    upgrade)
+    echo "Upgrade action"
+    ;;
+    status)
+        echo "Status Action"
+        echo "list of releases"
+        helm list --all --namespace ${EKS_NAMESPACE}
+        echo "list all pods in namespace"
+        kubectl -n ${EKS_NAMESPACE} get pods
+     ;;
+
+    *)
+    echo "No action for $action"
+    ;;
+esac
+echo "Action $action complete for $APP_NAME"

@@ -1,0 +1,3 @@
+java -jar \
+$JAVA_OPTS \
+$BUILD_DIR/app-build.jar

@@ -1,0 +1,35 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "appstoremanagement.fullname" . }}-gateway
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+    app: istio-ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "appstoremanagement.fullname" . }}
+spec:
+  gateways:
+  - {{ include "appstoremanagement.fullname" . }}-gateway
+  hosts:
+  - {{ .Values.app.host }}
+  http:
+  - match:
+    - uri:
+        prefix: {{ .Values.app.prefix }}
+    route:
+    - destination:
+        host: {{ include "appstoremanagement.fullname" . }}.{{ .Values.app.namespace }}.svc.cluster.local
+        port:
+          number: 80

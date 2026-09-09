@@ -1,0 +1,7 @@
+
+export JAVA_OPTS="$JAVA_OPTS \
+        -Dspring.profiles.active=$APPENV \
+        -Xmx1024m \
+        -XX:+UseG1GC \
+        -XX:+UseStringDeduplication \
+        -Dkafka.consumer.flag=$CONSUMER_FLAG"

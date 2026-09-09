@@ -1,0 +1,78 @@
+server:
+  forward-headers-strategy: framework
+  port: 8100
+management:
+  endpoints:
+    web:
+      base-path: /
+      path-mapping.health: /actuator/health
+      exposure:
+        include: health
+    jmx:
+      exposure:
+        exclude: '*'
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  application:
+    name: pulsesg-task-service
+  couchbase:
+    bootstrap-hosts: 52.91.169.220
+    bucket:
+      name: generatedata
+      password: ${PG_PULSORASTORE_PASSWORD}
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      indent-output: true
+  data:
+    couchbase:
+      auto-index: true
+couchDB:
+  login:
+    userName: generated
+#LOGGING_ROOT: C:/workspace/logs/pulsesg/server
+logging:
+  level:
+    root: INFO
+    org.springframework.data.couchbase.repository.query: DEBUG
+  io:
+    swagger:
+      models:
+        parameters:
+          AbstractSerializableParameter: error
+main:
+  business:
+    uri: /be/task
+
+validations:
+  task:
+    date-pattern: yyyy-MM-dd HH:mm:ss
+    yearmomth: YYYYMM
+    htmlTags: <("[^"]*"|'[^']*'|[^'">])*>
+
+# hystrix changes
+hystrix:
+  command:
+    taskService-addNewTask:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 10
+      cicuitBreaker:
+        enabled: true
+        requestVolumeThreshold: 30
+        sleepWindowInMilliseconds: 5000
+        errorThresholdPercentage: 90
+        forceOpen: false
+  threadpool:
+    taskService-addNewTask:
+      coreSize: 2
+      maximumSize: 5
+      queueSizeRejectionThreshold: 5
+      allowMaximumSizeToDivergeFromCoreSize: true
