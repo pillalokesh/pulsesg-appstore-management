@@ -74,6 +74,17 @@ pipeline {
             }
         }
 
+        stage('Verify AWS Identity') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-jenkins']]) {
+                    sh '''
+                        set -eu
+                        aws sts get-caller-identity
+                    '''
+                }
+            }
+        }
+
         stage('Configure EKS Access') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-jenkins']]) {
