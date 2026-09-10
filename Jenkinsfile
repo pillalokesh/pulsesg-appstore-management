@@ -139,12 +139,17 @@ pipeline {
 
         stage('Rollout Status') {
             steps {
-                sh '''
-                    set -eu
-                    kubectl rollout status deployment/appstoremanagement \
-                        --namespace "$KUBE_NAMESPACE" \
-                        --timeout=10m
-                '''
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-jenkins'
+                ]]) {
+                    sh '''
+                        set -eu
+                        kubectl rollout status deployment/appstoremanagement \
+                            --namespace "$KUBE_NAMESPACE" \
+                            --timeout=10m
+                    '''
+                }
             }
         }
     }
