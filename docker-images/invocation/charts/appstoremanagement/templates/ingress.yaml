@@ -30,7 +30,7 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}
+          {{- range (default (list (dict "path" "/" "pathType" "Prefix")) .paths) }}
           - path: {{ .path }}
             {{- with .pathType }}
             pathType: {{ . }}
