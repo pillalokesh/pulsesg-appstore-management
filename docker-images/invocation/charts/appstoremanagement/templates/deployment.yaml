@@ -40,19 +40,22 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: APPENV
+              value: practice
           ports:
             - name: http
               containerPort: 8100
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /be/appstore/actuator/health
+              path: /status
               port: 8100
             initialDelaySeconds: 120
             periodSeconds: 60
           readinessProbe:
             httpGet:
-              path: /be/appstore/actuator/health
+              path: /status
               port: 8100
             initialDelaySeconds: 120
             periodSeconds: 60
