@@ -108,7 +108,7 @@ pipeline {
                         aws eks update-kubeconfig \
                           --region "$AWS_REGION" \
                           --name "$EKS_CLUSTER"
-                        kubectl get namespace "$KUBE_NAMESPACE" >/dev/null
+                        kubectl get namespace "$KUBE_NAMESPACE" >/dev/null 2>&1 || kubectl create namespace "$KUBE_NAMESPACE"
                     '''
                 }
             }
