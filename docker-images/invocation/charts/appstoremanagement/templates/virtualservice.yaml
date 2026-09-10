@@ -1,3 +1,4 @@
+{{- if .Values.virtualService.enabled }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -33,3 +34,4 @@ spec:
         host: {{ include "appstoremanagement.fullname" . }}.{{ .Values.app.namespace }}.svc.cluster.local
         port:
           number: 80
+{{- end }}

@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'INGRESS_HOST', defaultValue: 'app.lokeshwaffle.in', description: 'Public hostname for this environment')
+        string(name: 'ACM_CERTIFICATE_ARN', defaultValue: '', description: 'ACM certificate ARN covering INGRESS_HOST')
+    }
+
     tools {
         // These names must match the installations configured in Manage Jenkins.
         jdk 'JDK17'
@@ -23,6 +28,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Validate Deployment Parameters') {
+            steps {
+                sh '''
+                    set -eu
+                    test -n "$INGRESS_HOST"
+                    test -n "$ACM_CERTIFICATE_ARN"
+                '''
             }
         }
 
@@ -107,7 +122,10 @@ pipeline {
                       --namespace "$KUBE_NAMESPACE" \
                       --set-string image.repository="$ECR_REGISTRY/$ECR_REPOSITORY" \
                       --set-string image.tag="$IMAGE_TAG" \
-                      --set-string service.type=LoadBalancer \
+                      --set ingress.enabled=true \
+                      --set ingress.className=alb \
+                      --set-string ingress.hosts[0].host="$INGRESS_HOST" \
+                      --set-string ingress.annotations.alb\\.ingress\\.kubernetes\\.io/certificate-arn="$ACM_CERTIFICATE_ARN" \
                       --wait \
                       --timeout 10m
                 '''
