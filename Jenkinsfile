@@ -116,19 +116,24 @@ pipeline {
 
         stage('Helm Deploy') {
             steps {
-                sh '''
-                    set -eu
-                    helm upgrade --install "$HELM_RELEASE" "$HELM_CHART" \
-                      --namespace "$KUBE_NAMESPACE" \
-                      --set-string image.repository="$ECR_REGISTRY/$ECR_REPOSITORY" \
-                      --set-string image.tag="$IMAGE_TAG" \
-                      --set ingress.enabled=true \
-                      --set ingress.className=alb \
-                      --set-string ingress.hosts[0].host="$INGRESS_HOST" \
-                      --set-string ingress.annotations.alb\\.ingress\\.kubernetes\\.io/certificate-arn="$ACM_CERTIFICATE_ARN" \
-                      --wait \
-                      --timeout 10m
-                '''
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-jenkins'
+                ]]) {
+                    sh '''
+                        set -eu
+                        helm upgrade --install "$HELM_RELEASE" "$HELM_CHART" \
+                          --namespace "$KUBE_NAMESPACE" \
+                          --set-string image.repository="$ECR_REGISTRY/$ECR_REPOSITORY" \
+                          --set-string image.tag="$IMAGE_TAG" \
+                          --set ingress.enabled=true \
+                          --set ingress.className=alb \
+                          --set-string ingress.hosts[0].host="$INGRESS_HOST" \
+                          --set-string ingress.annotations.alb\\.ingress\\.kubernetes\\.io/certificate-arn="$ACM_CERTIFICATE_ARN" \
+                          --wait \
+                          --timeout 10m
+                    '''
+                }
             }
         }
 
