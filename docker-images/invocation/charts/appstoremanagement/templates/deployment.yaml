@@ -42,20 +42,35 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: APPENV
-              value: practice
+              value: dev
+            - name: PG_PULSORASTORE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pulsorastore-db
+                  key: PG_PULSORASTORE_URL
+            - name: PG_PULSORASTORE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pulsorastore-db
+                  key: PG_PULSORASTORE_USER
+            - name: PG_PULSORASTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pulsorastore-db
+                  key: PG_PULSORASTORE_PASSWORD
           ports:
             - name: http
               containerPort: 8100
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /status
+              path: /be/app/store/app-store/status
               port: 8100
             initialDelaySeconds: 120
             periodSeconds: 60
           readinessProbe:
             httpGet:
-              path: /status
+              path: /be/app/store/app-store/status
               port: 8100
             initialDelaySeconds: 120
             periodSeconds: 60
