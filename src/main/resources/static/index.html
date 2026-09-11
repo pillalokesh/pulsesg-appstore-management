@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Agent Store - organization-approved business applications">
+    <title>Agent Store | Enterprise Applications</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="#discover" aria-label="Agent Store home">
+        <span class="brand-mark">A</span>
+        <span>
+            <strong>Agent Store</strong>
+            <small>Enterprise applications</small>
+        </span>
+    </a>
+    <nav class="main-nav" aria-label="Primary navigation">
+        <a href="#discover" data-view="discover" class="nav-link active">Discover</a>
+        <a href="#my-apps" data-view="my-apps" class="nav-link">My Apps</a>
+        <a href="#active-apps" data-view="active-apps" class="nav-link">Active Apps</a>
+        <a href="#categories" data-view="categories" class="nav-link">Categories</a>
+    </nav>
+    <div class="topbar-status"><span class="status-dot"></span>Internal catalog</div>
+</header>
+
+<main class="page-shell">
+    <section class="hero" aria-labelledby="page-title">
+        <div>
+            <p class="eyebrow">Organization-approved software</p>
+            <h1 id="page-title">Find the right application for your work.</h1>
+            <p class="hero-copy">Discover the business tools your teams use every day, all in one trusted place.</p>
+        </div>
+        <div class="hero-note">
+            <span class="hero-note-number" id="catalog-count">--</span>
+            <span>available<br>applications</span>
+        </div>
+    </section>
+
+    <section class="workspace" aria-label="Application catalog">
+        <aside class="sidebar">
+            <div class="sidebar-heading">
+                <span class="eyebrow">Browse</span>
+                <span class="catalog-label">Catalog</span>
+            </div>
+            <div id="category-list" class="category-list"></div>
+            <div class="context-card" id="context-card">
+                <p class="eyebrow">Workspace context</p>
+                <p class="context-copy">Enter your workspace details to view assigned applications.</p>
+                <label for="tenant-id">Tenant ID</label>
+                <input id="tenant-id" type="text" placeholder="Required for My Apps" autocomplete="off">
+                <label for="store-type">Store type</label>
+                <input id="store-type" type="text" placeholder="e.g. business" autocomplete="off">
+                <label for="user-id">User ID <span>(optional)</span></label>
+                <input id="user-id" type="text" placeholder="Optional" autocomplete="off">
+                <button id="save-context" class="button button-dark" type="button">Save workspace</button>
+            </div>
+        </aside>
+
+        <section class="catalog-panel">
+            <div class="catalog-toolbar">
+                <div>
+                    <p class="eyebrow" id="view-label">Discover</p>
+                    <h2 id="section-title">Available applications</h2>
+                </div>
+                <label class="search-box" for="search-input">
+                    <span aria-hidden="true">⌕</span>
+                    <input id="search-input" type="search" placeholder="Search applications" autocomplete="off">
+                </label>
+            </div>
+            <div id="selection-summary" class="selection-summary"></div>
+            <div id="message" class="message" role="status" aria-live="polite"></div>
+            <div id="app-grid" class="app-grid"></div>
+        </section>
+    </section>
+</main>
+
+<div id="details-dialog" class="dialog-backdrop" hidden>
+    <section class="details-dialog" role="dialog" aria-modal="true" aria-labelledby="details-title">
+        <button id="close-dialog" class="dialog-close" type="button" aria-label="Close details">×</button>
+        <div id="details-content"></div>
+    </section>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

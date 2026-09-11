@@ -5,7 +5,7 @@ server:
     max-threads: 200
     max-http-post-size: 15728640  # 15 MB in bytes
   servlet:
-    contextPath: /be/app/store
+    contextPath: /
 management:
   health:
     elasticsearch:
@@ -114,5 +114,9 @@ application:
 http:
   pulsesg:
     main: dev.pulsesg.com
+
+app:
+  store:
+    base-path: /be/app/store/app-store
 
 

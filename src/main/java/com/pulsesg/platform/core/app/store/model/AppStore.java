@@ -26,6 +26,7 @@ public class AppStore {
     private String version;
     private String visibleImageUrl;
     private String invisibleImageUrl;
+    private String appType;
     private Integer sortOrder;
 }
 

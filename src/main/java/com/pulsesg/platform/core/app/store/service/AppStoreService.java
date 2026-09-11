@@ -12,11 +12,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Profile("!practice")
 public class AppStoreService {
 
     private final Logger log = LoggerFactory.getLogger(AppStoreService.class);
@@ -69,6 +68,7 @@ public class AppStoreService {
         app.setVersion(entity.getVersion());
         app.setVisibleImageUrl(entity.getVisibleImageUrl());
         app.setInvisibleImageUrl(entity.getInvisibleImageUrl());
+        app.setAppType(entity.getAppType());
         app.setSortOrder(sortOrder);
         return app;
     }
@@ -113,7 +113,7 @@ public class AppStoreService {
                 appStoresList.add(buildAppStore(entity, assigned.getSortOrder()));
             }
         }
-        appStoresList.sort((a, b) -> a.getSortOrder().compareTo(b.getSortOrder()));
+        appStoresList.sort(Comparator.comparing(AppStore::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())));
         log.info("END :: getAllAppsForUser :: USER ID :: " + userId + " appStoresList Size :: " + appStoresList.size());
         return appStoresList;
     }
@@ -136,7 +136,7 @@ public class AppStoreService {
                 appStoresList.add(buildAppStore(entity, assigned.getSortOrder()));
             }
         }
-        appStoresList.sort((a, b) -> a.getSortOrder().compareTo(b.getSortOrder()));
+        appStoresList.sort(Comparator.comparing(AppStore::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())));
         log.info("END :: getActiveAppsForUser :: USER ID :: " + userId + " appStoresList Size :: " + appStoresList.size());
         return appStoresList;
     }
