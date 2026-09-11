@@ -1,6 +1,11 @@
 -- Manual DEV seed data for the existing app_store and user_assigned_apps tables.
 -- Run only after confirming the target database and schema. This script is not
 -- executed automatically by Spring Boot or the deployment pipeline.
+--
+-- Contract note:
+--   - category: catalog grouping used for browsing/filtering the app catalog
+--   - app_type: store type / app classification used by the user-assigned-app queries
+--   - storeType: request parameter passed by the frontend and matched against app_type
 
 INSERT INTO app_store (
     name,

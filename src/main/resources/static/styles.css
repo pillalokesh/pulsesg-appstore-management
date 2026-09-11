@@ -128,6 +128,11 @@ a { color: inherit; }
 .catalog-toolbar h2 { margin: 0; font-family: Georgia, serif; font-size: 30px; font-weight: 400; }
 .search-box { width: min(320px, 100%); display: flex; gap: 8px; align-items: center; padding: 9px 13px; border: 1px solid var(--line); border-radius: 3px; background: white; color: var(--teal); }
 .search-box input { width: 100%; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 13px; }
+.filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 10px; padding: 12px; border: 1px solid var(--line); background: #eef3f2; }
+.filter-control { display: grid; gap: 4px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.filter-control select { min-width: 135px; padding: 8px 26px 8px 9px; border: 1px solid #cbd9d7; border-radius: 2px; color: var(--ink); background: white; font-size: 12px; letter-spacing: 0; text-transform: none; }
+.clear-filters { padding: 8px 9px; border: 0; color: var(--teal-dark); background: transparent; cursor: pointer; font-size: 12px; }
+.clear-filters:hover { text-decoration: underline; }
 .selection-summary { min-height: 22px; margin-bottom: 14px; color: var(--muted); font-size: 12px; }
 .message { min-height: 24px; margin-bottom: 12px; color: var(--muted); font-size: 13px; }
 .message.error { color: #a4453c; }
@@ -138,6 +143,9 @@ a { color: inherit; }
 .app-icon { width: 48px; height: 48px; flex: 0 0 48px; display: grid; place-items: center; overflow: hidden; border-radius: 11px; color: white; background: var(--teal); font-family: Georgia, serif; font-size: 19px; }
 .app-icon img { width: 100%; height: 100%; object-fit: cover; }
 .status-badge { padding: 4px 7px; color: var(--teal-dark); background: #e2f1ed; border-radius: 2px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.badge-stack { display: grid; justify-items: end; gap: 5px; }
+.status-badge:not(.status-active) { color: #85652b; background: #f7ecd3; }
+.access-badge { color: var(--muted); font-size: 10px; }
 .app-card h3 { margin: 18px 0 5px; font-family: Georgia, serif; font-size: 21px; font-weight: 400; line-height: 1.15; }
 .app-description { display: -webkit-box; margin: 0; overflow: hidden; color: var(--muted); font-size: 13px; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 .app-meta { display: flex; flex-wrap: wrap; gap: 7px 14px; margin-top: auto; padding-top: 18px; color: var(--muted); font-size: 11px; }
@@ -184,6 +192,9 @@ a { color: inherit; }
     .hero-note { margin-top: 38px; }
     .catalog-toolbar { display: block; }
     .search-box { width: 100%; margin-top: 17px; }
+    .filter-bar { align-items: stretch; }
+    .filter-control { flex: 1 1 135px; }
+    .filter-control select { width: 100%; }
     .app-grid { grid-template-columns: 1fr; }
     .details-dialog { padding: 28px 22px; }
 }

@@ -69,6 +69,28 @@
                     <input id="search-input" type="search" placeholder="Search applications" autocomplete="off">
                 </label>
             </div>
+            <div class="filter-bar" aria-label="Catalog filters">
+                <label class="filter-control">Status
+                    <select id="status-filter">
+                        <option value="all">All statuses</option>
+                        <option value="active">Active</option>
+                        <option value="planned">Planned</option>
+                    </select>
+                </label>
+                <label class="filter-control">Type
+                    <select id="type-filter">
+                        <option value="all">All types</option>
+                    </select>
+                </label>
+                <label class="filter-control">Sort
+                    <select id="sort-order">
+                        <option value="name">Name</option>
+                        <option value="recent">Recently added</option>
+                        <option value="status">Status</option>
+                    </select>
+                </label>
+                <button id="clear-filters" class="clear-filters" type="button">Clear filters</button>
+            </div>
             <div id="selection-summary" class="selection-summary"></div>
             <div id="message" class="message" role="status" aria-live="polite"></div>
             <div id="app-grid" class="app-grid"></div>

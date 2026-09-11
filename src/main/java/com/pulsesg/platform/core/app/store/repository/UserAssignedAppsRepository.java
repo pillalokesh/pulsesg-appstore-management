@@ -8,18 +8,17 @@ import java.util.List;
 
 @Repository
 public interface UserAssignedAppsRepository extends JpaRepository<UserAssignedAppsEntity, Integer> {
-    // Custom query methods can be added here if needed
-    List<UserAssignedAppsEntity> findByUserIdAndActiveAndAppStoreEntity_Category(String userId, Boolean active, String category);
+    List<UserAssignedAppsEntity> findByUserIdAndActiveAndAppStoreEntity_AppTypeIgnoreCase(String userId, Boolean active, String appType);
 
-    List<UserAssignedAppsEntity> findByUserIdAndAppStoreEntity_Category(String userId, String category);
+    List<UserAssignedAppsEntity> findByUserIdAndAppStoreEntity_AppTypeIgnoreCase(String userId, String appType);
 
-    List<UserAssignedAppsEntity> findByTenantIdAndAppStoreEntity_Category(String tenantId, String category);
+    List<UserAssignedAppsEntity> findByTenantIdAndAppStoreEntity_AppTypeIgnoreCase(String tenantId, String appType);
 
-    List<UserAssignedAppsEntity> findByTenantIdAndActiveAndAppStoreEntity_Category(String tenantId, Boolean active, String category);
+    List<UserAssignedAppsEntity> findByTenantIdAndActiveAndAppStoreEntity_AppTypeIgnoreCase(String tenantId, Boolean active, String appType);
 
-    List<UserAssignedAppsEntity> findByTenantIdAndUserIdAndAppStoreEntity_Category(String tenantId, String userId, String storeType);
+    List<UserAssignedAppsEntity> findByTenantIdAndUserIdAndAppStoreEntity_AppTypeIgnoreCase(String tenantId, String userId, String appType);
 
-    List<UserAssignedAppsEntity> findByTenantIdAndAppStoreEntity_CategoryAndAppStoreEntity_AppType(String tenantId, String category, String appType);
+    List<UserAssignedAppsEntity> findByTenantIdAndAppStoreEntity_CategoryAndAppStoreEntity_AppTypeIgnoreCase(String tenantId, String category, String appType);
 
-    List<UserAssignedAppsEntity> findByTenantIdAndActiveAndAppStoreEntity_CategoryAndAppStoreEntity_AppType(String tenantId, Boolean active, String category, String appType);
+    List<UserAssignedAppsEntity> findByTenantIdAndActiveAndAppStoreEntity_CategoryAndAppStoreEntity_AppTypeIgnoreCase(String tenantId, Boolean active, String category, String appType);
 }

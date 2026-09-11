@@ -99,11 +99,11 @@ public class AppStoreService {
         log.info("START :: getAllAppsForUser :: USER ID :: " + userId);
         List<UserAssignedAppsEntity> assignedApps = new ArrayList<>();
         if (StringUtils.isNotEmpty(userType) && userType.equalsIgnoreCase("self-registered")) {
-            assignedApps = userAssignedAppsRepository.findByTenantIdAndAppStoreEntity_Category("public", storeType);
+            assignedApps = userAssignedAppsRepository.findByTenantIdAndAppStoreEntity_AppTypeIgnoreCase("public", storeType);
         } else if (StringUtils.isNotEmpty(tenantId)) {
-            assignedApps = userAssignedAppsRepository.findByTenantIdAndAppStoreEntity_Category(tenantId, storeType);
+            assignedApps = userAssignedAppsRepository.findByTenantIdAndAppStoreEntity_AppTypeIgnoreCase(tenantId, storeType);
         } else if (StringUtils.isNotEmpty(userId)) {
-            assignedApps = userAssignedAppsRepository.findByUserIdAndAppStoreEntity_Category(userId, storeType);
+            assignedApps = userAssignedAppsRepository.findByUserIdAndAppStoreEntity_AppTypeIgnoreCase(userId, storeType);
         }
         List<AppStore> appStoresList = new ArrayList<>();
         Set<String> userRoles = parseRoles(roles);
@@ -122,11 +122,11 @@ public class AppStoreService {
         log.info("START :: getActiveAppsForUser :: USER ID :: " + userId);
         List<UserAssignedAppsEntity> assignedApps = new ArrayList<>();
         if (StringUtils.isNotEmpty(userType) && userType.equalsIgnoreCase("self-registered")) {
-            assignedApps = userAssignedAppsRepository.findByTenantIdAndActiveAndAppStoreEntity_Category("public", true, storeType);
+            assignedApps = userAssignedAppsRepository.findByTenantIdAndActiveAndAppStoreEntity_AppTypeIgnoreCase("public", true, storeType);
         } else if (StringUtils.isNotEmpty(tenantId)) {
-            assignedApps = userAssignedAppsRepository.findByTenantIdAndActiveAndAppStoreEntity_Category(tenantId, active, storeType);
+            assignedApps = userAssignedAppsRepository.findByTenantIdAndActiveAndAppStoreEntity_AppTypeIgnoreCase(tenantId, active, storeType);
         } else if (StringUtils.isNotEmpty(userId)) {
-            assignedApps = userAssignedAppsRepository.findByUserIdAndActiveAndAppStoreEntity_Category(userId, active, storeType);
+            assignedApps = userAssignedAppsRepository.findByUserIdAndActiveAndAppStoreEntity_AppTypeIgnoreCase(userId, active, storeType);
         }
         List<AppStore> appStoresList = new ArrayList<>();
         Set<String> userRoles = parseRoles(roles);
